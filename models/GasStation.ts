@@ -1,6 +1,6 @@
 type GasStation = {
-    name: string,
     address: { street_line: string, city_line: string },
+    age: number,
     price: number,
     distance: number,
     fuels: string,

@@ -1,34 +1,43 @@
 import React from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Platform } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Platform, Linking } from "react-native";
 import { GasStation } from "../models/GasStation";
 import { CARD_HEIGHT, CARD_WIDTH } from "../confs/const";
 type Props = {
     station: GasStation,
-    OnpressFuntion: (isVisible: boolean) => void,
     style: any,
 }
+const handleOpenWaze = (latitude: number, longitude: number) => {
+    const wazeUrl = `https://www.waze.com/ul?ll=${latitude},${longitude}&navigate=yes`;
+    Linking.openURL(wazeUrl);
+};
 
 const StationCard = (props: Props) => {
     return (
         <TouchableOpacity
             activeOpacity={0.8}
             style={[props.style, styles.stationCard]}
-            onPress={() => { props.OnpressFuntion }}
+            onPress={() => { handleOpenWaze(props.station.location?.latitude, props.station.location?.longitude) }}
         >
             <View style={styles.display}>
                 <View style={styles.Price}>
+                    <View style={styles.CenterPrice}>
+                        <Text style={styles.TitleFuel}>Price</Text>
+                        <Text style={styles.FuelTypeText}>{props.station.fuels}</Text>
+                    </View>
                     <Text style={styles.PriceText}>{props.station.price}</Text>
                 </View>
-                <View style={styles.FuelType}>
-                    <Text style={styles.FuelTypeText}>{props.station.fuels}</Text>
+                <View style={styles.Age}>
+                    <Text style={styles.Update}>Last Update</Text>
+                    <View style={styles.CenterAge}>
+                        <Text style={styles.AgeText}>{Math.round((props.station.age + Number.EPSILON) * 100) / 100 + " d"}</Text>
+                        <Text style={styles.Ago}>ago</Text>
+                    </View>
                 </View>
                 <View style={styles.Distance}>
-                    <Text style={styles.DistanceText}>{Math.round(props.station.distance/ 1000) + " km"}</Text>
+                    <Text style={styles.TitleDistance}>Distance</Text>
+                    <Text style={styles.DistanceText}>{Math.round((props.station.distance / 1000 + Number.EPSILON) * 100) / 100 + " km"}</Text>
                 </View>
             </View>
-            <Text style={[styles.title, props.station.name.length >= 30 ? { fontSize: 14 } : { fontSize: 23 }]}>
-                {props.station.name}
-            </Text>
             <View style={styles.footer}>
                 <Text style={[styles.footerText]}>{props.station.address.street_line + " " + props.station.address.city_line}</Text>
             </View>
@@ -46,10 +55,8 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         height: CARD_HEIGHT,
         width: CARD_WIDTH,
-        backgroundColor: '#FFF',
+        backgroundColor: 'red',
         borderRadius: 20,
-        padding: 15,
-
         ...Platform.select({
             ios: {
                 height: 200,
@@ -61,40 +68,97 @@ const styles = StyleSheet.create({
     display: {
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
+        backgroundColor: '#34c924',
     },
     title: {
         maxWidth: "90%",
         marginLeft: "3%",
     },
     Price: {
-        borderRightWidth: 1,
-        borderColor: '#CCC',
+        flex: 1,
+        alignItems: 'center',
     },
-    PriceText: {
-        fontSize: 18,
-        paddingLeft: 5,
-        maxWidth: "90%"
-    },
-    FuelType: {
-        borderRightWidth: 1,
-        borderColor: '#CCC',
-    },
-    FuelTypeText: {
-        fontSize: 18,
-        paddingLeft: 5,
-        maxWidth: "90%"
-    },
-    footer: {
+    CenterPrice: {
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        left: "6%",
+        justifyContent: 'center',
+        bottom: '8%',
+    },
+    TitleFuel: {
+        fontFamily: "AtkinsonHyperlegible_400Regular",
+        fontSize: 10,
+        color: 'white',
+        right: '80%',
+    },
+    PriceText: {
+        fontFamily: "AtkinsonHyperlegible_700Bold",
+        fontSize: 15,
+        color: 'white',
+        bottom: '20%',
+    },
+    FuelTypeText: {
+        fontFamily: "AtkinsonHyperlegible_400Regular",
+        fontSize: 10,
+        color: 'white',
+        left: '80%',
+    },
+    Age: {
+        flex: 1,
+        borderRightWidth: 2,
+        borderLeftWidth: 2,
+        borderColor: 'white',
+    },
+    Update: {
+        fontFamily: "AtkinsonHyperlegible_400Regular",
+        fontSize: 10,
+        color: 'white',
+        top: '1%',
+        left: '2%',
+    },
+    CenterAge: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    AgeText: {
+        fontFamily: "AtkinsonHyperlegible_700Bold",
+        fontSize: 15,
+        color: 'white',
+    },
+    Ago: {
+        left: '10%',
+        fontFamily: "AtkinsonHyperlegible_700Bold",
+        fontSize: 13,
+        color: 'white',
+    },
+    Distance: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    TitleDistance: {
+        fontFamily: "AtkinsonHyperlegible_400Regular",
+        fontSize: 10,
+        color: 'white',
+        right: '30%',
+        bottom: '18%',
+    },
+    DistanceText: {
+        fontFamily: "AtkinsonHyperlegible_700Bold",
+        fontSize: 15,
+        color: 'white',
+    },
+    footer: {
+        flex: 1,
+        flexDirection: 'row',
+        backgroundColor: 'white',
     },
     footerText: {
-        fontSize: 18,
-        paddingLeft: 5,
-        maxWidth: "90%"
+        fontFamily: "AtkinsonHyperlegible_400Regular",
+        fontSize: 15,
+        left: '10%',
     },
 
 });

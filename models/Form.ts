@@ -7,7 +7,7 @@ type FormValues = {
     fuelType: FuelType;
     maxDistance: number;
 };
-function correspondance(searchFuel: string, station :GasStation): number {
+function correspondancePrix(searchFuel: string, station :GasStation): number {
     switch (searchFuel) {
         case 'Gazole':
             return station.fields.gazole_prix;
@@ -23,5 +23,21 @@ function correspondance(searchFuel: string, station :GasStation): number {
             return 0;
   }
 }
+function correspondanceAge(searchFuel: string, station :GasStation): Date {
+    switch (searchFuel) {
+        case 'Gazole':
+            return new Date(station.fields.gazole_maj);
+        case 'SP95':
+            return new Date(station.fields.sp95_maj);
+        case 'SP98':
+            return new Date(station.fields.sp98_maj);
+        case 'E85':
+            return new Date(station.fields.e85_maj);
+        case 'GPLc':
+            return new Date(station.fields.gplc_maj);
+        default:
+            return new Date();
+    }
+}
 
-export { FormValues, FuelType, correspondance};
+export { FormValues, FuelType, correspondancePrix, correspondanceAge};
