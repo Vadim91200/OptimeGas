@@ -7,19 +7,20 @@ import {
     StyleSheet,
     View,
 } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Form from '../components/Form';
-import { width, CARD_WIDTH} from '../confs/const';
+import { width, CARD_WIDTH } from '../confs/const';
 import { FormValues, correspondancePrix, correspondanceAge } from '../models/Form';
 import { GasStation } from '../models/GasStation';
 import axios from 'axios';
 import StationCard from '../components/StationCard';
-const Home = ({ navigation, userCoords, mapViewRef }: any) => {
+const Home = ({ userCoords, mapViewRef }: any) => {
     const [formValues, setFormValues] = useState<FormValues>({
         fuelType: 'Gazole',
         maxDistance: 10000,
     });
     const [loading, setLoading] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
     const [GasStations, setGasStations] = useState<GasStation[]>([]);
     const [showGasStations, setShowGasStations] = useState(false); // Track the visibility of the ScrollView
     const scrollViewRef = useRef<ScrollView>(null);
@@ -28,6 +29,7 @@ const Home = ({ navigation, userCoords, mapViewRef }: any) => {
     let mapAnimation = new Animated.Value(0);
 
     useEffect(() => {
+        console.log("TAEZE");
         mapAnimation.addListener(({ value }) => {
             let index = Math.floor(value / CARD_WIDTH + 0.3);
             if (index >= GasStations.length) {
@@ -46,11 +48,13 @@ const Home = ({ navigation, userCoords, mapViewRef }: any) => {
         });
     });
     const findCheapestGasStation = async () => {
+        console.log("chep");
         setShowGasStations(false)
         setGasStations([]);
         setLoading(!loading);
     };
     useEffect(() => {
+        console.log("get");
         if (userCoords) {
             (async () => {
                 try {
@@ -60,7 +64,7 @@ const Home = ({ navigation, userCoords, mapViewRef }: any) => {
                         if (station.fields.carburants_disponibles && station.fields.carburants_disponibles.includes(formValues.fuelType)) {
                             GasStations.push({
                                 address: { street_line: station.fields.adresse, city_line: station.fields.ville },
-                                age: Math.abs(new Date().getTime() - correspondanceAge(formValues.fuelType, station).getTime())/86400000,
+                                age: Math.abs(new Date().getTime() - correspondanceAge(formValues.fuelType, station).getTime()) / 86400000,
                                 price: correspondancePrix(formValues.fuelType, station),
                                 distance: station.fields.dist,
                                 fuels: formValues.fuelType,
@@ -84,6 +88,7 @@ const Home = ({ navigation, userCoords, mapViewRef }: any) => {
         }
     }, [loading]);
     const handlestationFocus = (station: GasStation) => {
+        console.log("focus");
         if (mapViewRef.current) {
             mapViewRef.current.animateToRegion(
                 {
@@ -97,6 +102,7 @@ const Home = ({ navigation, userCoords, mapViewRef }: any) => {
         }
     };
     const formatGasStationData = async (GasStations: GasStation[]) => {
+        console.log("format");
         GasStations.sort((a, b) => a.price - b.price);
         setGasStations(GasStations.slice(0, 15));
     };
@@ -152,6 +158,7 @@ const Home = ({ navigation, userCoords, mapViewRef }: any) => {
                 style={styles.map}
                 ref={mapViewRef}
                 showsUserLocation={true}
+                provider={PROVIDER_GOOGLE}
             >
                 {GasStations.map((marker, index) => (
                     <Marker

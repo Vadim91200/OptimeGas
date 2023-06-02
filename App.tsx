@@ -1,9 +1,9 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
-  StyleSheet,
+  StyleSheet, View, Text
 } from 'react-native';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as Location from 'expo-location';
 import LoadingPage from './screens/AppLoading';
 import HomePage from './screens/Home';
@@ -18,11 +18,14 @@ import {
 
 const Stack = createNativeStackNavigator();
 
-export default function App() {
+
+const App = () => {
   const [userCoords, setUserCoords] = useState<{ latitude: number; longitude: number } | null>(null);
   const mapViewRef = useRef<MapView>(null);
   useEffect(() => {
+
     (async () => {
+      console.log("Alaongtsey");
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         console.log('Permission to access location was denied');
@@ -64,13 +67,12 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Group>
-          <Stack.Screen name="Home Page" options={{ headerShown: false }} children={() => <HomePage userCoords={userCoords} mapViewRef={mapViewRef} />} />
-        </Stack.Group>
+        <Stack.Screen name="Home Page" options={{ headerShown: false }} children={() => <HomePage userCoords={userCoords} mapViewRef={mapViewRef} />} />
       </Stack.Navigator>
     </NavigationContainer>
   );
-};
+}
+export default App;
 const styles = StyleSheet.create({
   containerStationCard: {
     position: "absolute",

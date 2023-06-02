@@ -21,10 +21,21 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.vadim91200.gas_station_finder",
+      "config":{
+        "googleMaps":{
+          "apiKey": "AIzaSyAbhUatLEldt69UCMo6HoAOyGqpmg1QP7w"
+        }
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3fc0c0c3-505e-42f5-afd6-7414d1d07f10"
+      }
     }
   }
 }
