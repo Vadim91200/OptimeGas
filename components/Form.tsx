@@ -1,123 +1,112 @@
-import { StyleSheet, Text, TouchableOpacity, View, TextInput } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Image, TouchableWithoutFeedback, Modal } from "react-native";
 import React, { useState } from 'react';
-import { FormValues, FuelType} from "../models/Form";
+import { FormValues, FuelType } from "../models/Form";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Slider from '@react-native-community/slider';
 type Props = {
     OnpressFuntion: () => void,
     formValues: FormValues,
     setFormValues: (formValues: FormValues) => void,
 }
 const Form = (props: Props) => {
+    const [iconModalVisible, setIconModalVisible] = useState(false);
+    const [distanceModalVisible, setDistanceModalVisible] = useState(false);
     const handleFuelTypeChange = (value: FuelType) => {
         props.setFormValues({ ...props.formValues, fuelType: value });
     };
     const handleMaxDistanceChange = (value: string) => {
         props.setFormValues({ ...props.formValues, maxDistance: parseInt(value, 10) });
     };
-    
+
     return (
-        <View style={styles.form}>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Fuel Type:</Text>
-                <View style={styles.input}>
-                    <TouchableOpacity
-                        onPress={() => handleFuelTypeChange('Gazole')}
-                        style={[styles.fuelTypeButton, props.formValues.fuelType === 'Gazole' ? styles.selectedFuelTypeButton : null]}
-                    >
-                        <Text style={styles.fuelTypeButtonText}>Gazole</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => handleFuelTypeChange('SP95')}
-                        style={[styles.fuelTypeButton, props.formValues.fuelType === 'SP95' ? styles.selectedFuelTypeButton : null]}
-                    >
-                        <Text style={styles.fuelTypeButtonText}>SP95</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => handleFuelTypeChange('SP98')}
-                        style={[styles.fuelTypeButton, props.formValues.fuelType === 'SP98' ? styles.selectedFuelTypeButton : null]}
-                    >
-                        <Text style={styles.fuelTypeButtonText}>SP98</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => handleFuelTypeChange('E85')}
-                        style={[styles.fuelTypeButton, props.formValues.fuelType === 'E85' ? styles.selectedFuelTypeButton : null]}
-                    >
-                        <Text style={styles.fuelTypeButtonText}>E85</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => handleFuelTypeChange('GPLc')}
-                        style={[styles.fuelTypeButton, props.formValues.fuelType === 'GPLc' ? styles.selectedFuelTypeButton : null]}
-                    >
-                        <Text style={styles.fuelTypeButtonText}>GPLc</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Max Distance (m):</Text>
-                <TextInput
-                    style={styles.input}
-                    keyboardType="numeric"
-                    value={props.formValues.maxDistance.toString()}
-                    onChangeText={handleMaxDistanceChange}
+        <View style={styles.Container}>
+            <View style={styles.IconView}>
+                <MaterialCommunityIcons name="fuel" size={40} style={{ paddingBottom: 8 }}
+                    onPress={() => setIconModalVisible(true)}
+                />
+                <MaterialCommunityIcons name="map-marker-distance" size={40} 
+                    onPress={() => setDistanceModalVisible(true)}
+                />
+                <MaterialCommunityIcons name="text-search" size={40} style={{ paddingTop: 5 }}
+                    onPress={() => props.OnpressFuntion()}
                 />
             </View>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={() => { props.OnpressFuntion() }} style={styles.button}>
-                    <Text style={styles.buttonText}>Find Gas Stations</Text>
-                </TouchableOpacity>
-            </View>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={iconModalVisible}
+                onRequestClose={() => setIconModalVisible(false)}
+            >
+                <View style={styles.IconModal}>
+                    <TouchableWithoutFeedback onPress={() => { handleFuelTypeChange('Gazole'), setIconModalVisible(false) }}>
+                        <View style={styles.Icon}>
+                            <Image style={styles.image} source={require('../assets/fuels/B7.png')} />
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => { handleFuelTypeChange('SP95'), setIconModalVisible(false) }}>
+                        <View style={styles.Icon}>
+                            <Image style={styles.image} source={require('../assets/fuels/sp95.png')} />
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => { handleFuelTypeChange('SP98'), setIconModalVisible(false) }}>
+                        <View style={styles.Icon}>
+                            <Image style={styles.image} source={require('../assets/fuels/sp98.png')} />
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => { handleFuelTypeChange('E85'), setIconModalVisible(false) }}>
+                        <View style={styles.Icon}>
+                            <Image style={styles.image} source={require('../assets/fuels/E85.png')} />
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => { handleFuelTypeChange('GPLc'), setIconModalVisible(false) }}>
+                        <View style={styles.Icon}>
+                            <Image style={styles.image} source={require('../assets/fuels/gpl.png')} />
+                        </View>
+                    </TouchableWithoutFeedback>
+                </View>
+            </Modal>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={distanceModalVisible}
+                onRequestClose={() => setDistanceModalVisible(false)}
+            >
+                <View style={styles.DistanceModal}>
+                    <Slider
+                        style={{ width: 200, height: 40 }}
+                        minimumValue={5000}
+                        maximumValue={50000}
+                        minimumTrackTintColor="#FFFFFF"
+                        maximumTrackTintColor="#000000"
+                        onValueChange={(value) => handleMaxDistanceChange(value.toString())}
+                        onSlidingComplete={() => setDistanceModalVisible(false)}
+                    />
+                    <Text>Max Distance: {props.formValues.maxDistance} m</Text>
+                </View>
+            </Modal>
         </View>
     );
 };
 export default Form;
 const styles = StyleSheet.create({
-    inputContainer: {
-        marginBottom: 10,
-    },
-    label: {
-        fontWeight: 'bold',
-        marginBottom: 5,
-    },
-    input: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingVertical: 10,
-        paddingHorizontal: 8,
-        borderWidth: 1,
-        borderColor: '#CCC',
-        borderRadius: 4,
-    },
-    fuelTypeButton: {
-        backgroundColor: '#FFF',
-        borderWidth: 1,
-        borderColor: '#CCC',
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        borderRadius: 4,
-    },
-    selectedFuelTypeButton: {
-        backgroundColor: '#007AFF',
-        borderColor: '#007AFF',
-    },
-    fuelTypeButtonText: {
-        color: '#333',
-        fontWeight: 'bold',
-    },
-    form: {
+    Container: {
         position: 'absolute',
-        top: '5%',
-        left: '5%',
-        right: '5%',
-        backgroundColor: '#FFF',
-        borderRadius: 8,
-        padding: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.3,
-        shadowRadius: 2,
-        elevation: 3,
     },
-    buttonContainer: {
+    IconView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        alignContent: "center",
+        alignSelf: "center",
+        top: "50%",
+        left: "900%",
+    },
+    Icon: {
+        padding: 2,
+    },
+    image: {
+        width: 50,
+        height: 50,
     },
     button: {
         backgroundColor: '#007AFF',
@@ -129,5 +118,15 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#FFF',
         fontWeight: 'bold',
+    },
+    DistanceModal: {
+        backgroundColor: "white",
+        marginHorizontal: 100,
+        alignItems: "center",
+    },
+    IconModal: {
+        alignItems: "center",
+        left: "42%",
+        top: "20%",
     },
 });

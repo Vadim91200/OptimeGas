@@ -18,14 +18,11 @@ import {
 
 const Stack = createNativeStackNavigator();
 
-
 const App = () => {
   const [userCoords, setUserCoords] = useState<{ latitude: number; longitude: number } | null>(null);
   const mapViewRef = useRef<MapView>(null);
   useEffect(() => {
-
     (async () => {
-      console.log("Alaongtsey");
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         console.log('Permission to access location was denied');

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
     Alert,
     Animated,
-    Platform,
     ScrollView,
     StyleSheet,
     View,
@@ -14,13 +13,13 @@ import { FormValues, correspondancePrix, correspondanceAge } from '../models/For
 import { GasStation } from '../models/GasStation';
 import axios from 'axios';
 import StationCard from '../components/StationCard';
+
 const Home = ({ userCoords, mapViewRef }: any) => {
     const [formValues, setFormValues] = useState<FormValues>({
         fuelType: 'Gazole',
         maxDistance: 10000,
     });
     const [loading, setLoading] = useState(false);
-    const [modalVisible, setModalVisible] = useState(false);
     const [GasStations, setGasStations] = useState<GasStation[]>([]);
     const [showGasStations, setShowGasStations] = useState(false); // Track the visibility of the ScrollView
     const scrollViewRef = useRef<ScrollView>(null);
@@ -29,7 +28,6 @@ const Home = ({ userCoords, mapViewRef }: any) => {
     let mapAnimation = new Animated.Value(0);
 
     useEffect(() => {
-        console.log("TAEZE");
         mapAnimation.addListener(({ value }) => {
             let index = Math.floor(value / CARD_WIDTH + 0.3);
             if (index >= GasStations.length) {
@@ -48,18 +46,15 @@ const Home = ({ userCoords, mapViewRef }: any) => {
         });
     });
     const findCheapestGasStation = async () => {
-        console.log("chep");
         setShowGasStations(false)
         setGasStations([]);
         setLoading(!loading);
     };
     useEffect(() => {
-        console.log("get");
         if (userCoords) {
             (async () => {
                 try {
                     const response = await axios.get(` https://data.economie.gouv.fr/api/records/1.0/search/?dataset=prix-des-carburants-en-france-flux-instantane-v2&q=&rows=10000&facet=carburants_disponibles&geofilter.distance=${userCoords.latitude}%2C+${userCoords.longitude}%2C+${formValues.maxDistance}`);
-                    console.log("J'ai été appelé")
                     response.data.records.forEach((station: any) => {
                         if (station.fields.carburants_disponibles && station.fields.carburants_disponibles.includes(formValues.fuelType)) {
                             GasStations.push({
@@ -74,7 +69,6 @@ const Home = ({ userCoords, mapViewRef }: any) => {
                     });
                     formatGasStationData(GasStations);
                     if (GasStations.length > 0) {
-                        console.log(GasStations)
                         setShowGasStations(true);
                         handlestationFocus(GasStations[0]);
                     } else {
@@ -88,7 +82,6 @@ const Home = ({ userCoords, mapViewRef }: any) => {
         }
     }, [loading]);
     const handlestationFocus = (station: GasStation) => {
-        console.log("focus");
         if (mapViewRef.current) {
             mapViewRef.current.animateToRegion(
                 {
@@ -102,7 +95,6 @@ const Home = ({ userCoords, mapViewRef }: any) => {
         }
     };
     const formatGasStationData = async (GasStations: GasStation[]) => {
-        console.log("format");
         GasStations.sort((a, b) => a.price - b.price);
         setGasStations(GasStations.slice(0, 15));
     };
@@ -170,12 +162,13 @@ const Home = ({ userCoords, mapViewRef }: any) => {
                     />
                 ))}
             </MapView>
+           
             <Form
                 OnpressFuntion={findCheapestGasStation}
                 formValues={formValues}
                 setFormValues={setFormValues}
             />
-        </View>
+        </View >
     );
 };
 
@@ -202,4 +195,5 @@ const styles = StyleSheet.create({
     },
     stationCard: {
     },
+
 });
