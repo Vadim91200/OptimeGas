@@ -66,12 +66,13 @@ const Form = (props: Props) => {
                 </View>
             </Modal>
             <Modal
-                animationType="slide"
+                animationType='fade'
                 transparent={true}
                 visible={distanceModalVisible}
                 onRequestClose={() => setDistanceModalVisible(false)}
             >
                 <View style={styles.DistanceModal}>
+                <Text>Radius distance : </Text>
                     <Slider
                         style={{ width: 200, height: 40 }}
                         minimumValue={5000}
@@ -81,7 +82,7 @@ const Form = (props: Props) => {
                         onValueChange={(value) => handleMaxDistanceChange(value.toString())}
                         onSlidingComplete={() => setDistanceModalVisible(false)}
                     />
-                    <Text>Max Distance: {props.formValues.maxDistance} m</Text>
+                    <Text>{props.formValues.maxDistance} m</Text>
                 </View>
             </Modal>
         </View>
@@ -120,13 +121,20 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     DistanceModal: {
-        backgroundColor: "white",
         marginHorizontal: 100,
         alignItems: "center",
+        backgroundColor: 'rgba(0, 0, 0, 0.20)',
+        borderRadius: 20,
+        top: "2%",
     },
     IconModal: {
         alignItems: "center",
+        marginHorizontal: "40%",
+        paddingVertical: "2%",
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        borderBottomLeftRadius: 20,
+        borderTopLeftRadius: 20,
         left: "42%",
-        top: "20%",
+        top: "25%",
     },
 });
