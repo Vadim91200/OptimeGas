@@ -21,70 +21,76 @@ const Form = (props: Props) => {
     return (
         <View style={styles.Container}>
             <View style={styles.IconView}>
-                <MaterialCommunityIcons name="fuel" size={40} style={{ paddingBottom: 8 }}
-                    onPress={() => setIconModalVisible(true)}
-                />
-                <MaterialCommunityIcons name="map-marker-distance" size={40} 
-                    onPress={() => setDistanceModalVisible(true)}
-                />
-                <MaterialCommunityIcons name="text-search" size={40} style={{ paddingTop: 5 }}
-                    onPress={() => props.OnpressFuntion()}
-                />
-            </View>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={iconModalVisible}
-                onRequestClose={() => setIconModalVisible(false)}
-            >
-                <View style={styles.IconModal}>
-                    <TouchableWithoutFeedback onPress={() => { handleFuelTypeChange('Gazole'), setIconModalVisible(false) }}>
-                        <View style={styles.Icon}>
-                            <Image style={styles.image} source={require('../assets/fuels/B7.png')} />
-                        </View>
-                    </TouchableWithoutFeedback>
-                    <TouchableWithoutFeedback onPress={() => { handleFuelTypeChange('SP95'), setIconModalVisible(false) }}>
-                        <View style={styles.Icon}>
-                            <Image style={styles.image} source={require('../assets/fuels/sp95.png')} />
-                        </View>
-                    </TouchableWithoutFeedback>
-                    <TouchableWithoutFeedback onPress={() => { handleFuelTypeChange('SP98'), setIconModalVisible(false) }}>
-                        <View style={styles.Icon}>
-                            <Image style={styles.image} source={require('../assets/fuels/sp98.png')} />
-                        </View>
-                    </TouchableWithoutFeedback>
-                    <TouchableWithoutFeedback onPress={() => { handleFuelTypeChange('E85'), setIconModalVisible(false) }}>
-                        <View style={styles.Icon}>
-                            <Image style={styles.image} source={require('../assets/fuels/E85.png')} />
-                        </View>
-                    </TouchableWithoutFeedback>
-                    <TouchableWithoutFeedback onPress={() => { handleFuelTypeChange('GPLc'), setIconModalVisible(false) }}>
-                        <View style={styles.Icon}>
-                            <Image style={styles.image} source={require('../assets/fuels/gpl.png')} />
-                        </View>
-                    </TouchableWithoutFeedback>
-                </View>
-            </Modal>
-            <Modal
-                animationType='fade'
-                transparent={true}
-                visible={distanceModalVisible}
-                onRequestClose={() => setDistanceModalVisible(false)}
-            >
-                <View style={styles.DistanceModal}>
-                <Text>Radius distance : </Text>
-                    <Slider
-                        style={{ width: 200, height: 40 }}
-                        minimumValue={5000}
-                        maximumValue={50000}
-                        minimumTrackTintColor="#FFFFFF"
-                        maximumTrackTintColor="#000000"
-                        onValueChange={(value) => handleMaxDistanceChange(value.toString())}
-                        onSlidingComplete={() => setDistanceModalVisible(false)}
+                <View style={styles.fuelCircle}>
+                    <MaterialCommunityIcons name="fuel" size={40}
+                        onPress={() => setIconModalVisible(true)}
                     />
-                    <Text>{props.formValues.maxDistance} m</Text>
                 </View>
-            </Modal>
+                <View style={styles.distanceCircle}>
+                    <MaterialCommunityIcons name="map-marker-distance" size={40}
+                        onPress={() => setDistanceModalVisible(true)}
+                    />
+                </View>
+                <View style={styles.fuelCircle}>
+                    <MaterialCommunityIcons name="text-search" size={40}
+                        onPress={() => props.OnpressFuntion()}
+                    />
+                </View>
+            </View>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={iconModalVisible}
+                    onRequestClose={() => setIconModalVisible(false)}
+                >
+                    <View style={styles.IconModal}>
+                        <TouchableWithoutFeedback onPress={() => { handleFuelTypeChange('Gazole'), setIconModalVisible(false) }}>
+                            <View style={styles.Icon}>
+                                <Image style={styles.image} source={require('../assets/fuels/B7.png')} />
+                            </View>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={() => { handleFuelTypeChange('SP95'), setIconModalVisible(false) }}>
+                            <View style={styles.Icon}>
+                                <Image style={styles.image} source={require('../assets/fuels/sp95.png')} />
+                            </View>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={() => { handleFuelTypeChange('SP98'), setIconModalVisible(false) }}>
+                            <View style={styles.Icon}>
+                                <Image style={styles.image} source={require('../assets/fuels/sp98.png')} />
+                            </View>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={() => { handleFuelTypeChange('E85'), setIconModalVisible(false) }}>
+                            <View style={styles.Icon}>
+                                <Image style={styles.image} source={require('../assets/fuels/E85.png')} />
+                            </View>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={() => { handleFuelTypeChange('GPLc'), setIconModalVisible(false) }}>
+                            <View style={styles.Icon}>
+                                <Image style={styles.image} source={require('../assets/fuels/gpl.png')} />
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </View>
+                </Modal>
+                <Modal
+                    animationType='fade'
+                    transparent={true}
+                    visible={distanceModalVisible}
+                    onRequestClose={() => setDistanceModalVisible(false)}
+                >
+                    <View style={styles.DistanceModal}>
+                        <Text>Radius distance : </Text>
+                        <Slider
+                            style={{ width: 200, height: 40 }}
+                            minimumValue={5000}
+                            maximumValue={50000}
+                            minimumTrackTintColor="#FFFFFF"
+                            maximumTrackTintColor="#000000"
+                            onValueChange={(value) => handleMaxDistanceChange(value.toString())}
+                            onSlidingComplete={() => setDistanceModalVisible(false)}
+                        />
+                        <Text>{props.formValues.maxDistance} m</Text>
+                    </View>
+                </Modal>
         </View>
     );
 };
@@ -95,12 +101,8 @@ const styles = StyleSheet.create({
     },
     IconView: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        alignContent: "center",
-        alignSelf: "center",
         top: "50%",
-        left: "900%",
+        left: "700%",
     },
     Icon: {
         padding: 2,
@@ -136,5 +138,38 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 20,
         left: "42%",
         top: "25%",
+    },
+    centeredModal: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: 'rgba(0, 0, 0, 0.74)'
+    },
+    fuelCircle: {
+        borderRadius: 25,
+        width: 50,
+        height: 50,
+        backgroundColor: 'white',
+        marginBottom: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    distanceCircle: {
+        borderRadius: 25,
+        width: 50,
+        height: 50,
+        marginBottom: 8,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    searchCircle: {
+        borderRadius: 25,
+        width: 50,
+        height: 50,
+        backgroundColor: 'white',
+        marginTop: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
